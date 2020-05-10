@@ -105,7 +105,7 @@ describe("Transform CSS AST to Emotion", ({test, _}) =>
   })
 );
 
-let eq_expr = (expr1, expr2) =>
+let equals = (expr1, expr2) =>
   Pprintast.string_of_expression(expr1) == Pprintast.string_of_expression(expr2);
 
 describe("emit bs-emotion from css", ({ test, _}) => {
@@ -118,6 +118,36 @@ describe("emit bs-emotion from css", ({ test, _}) => {
     let expected = [%expr
       Emotion.global({js|body|js}, [Emotion.margin(`zero)]);
     ];
-    expect.bool(eq_expr(expr, expected)).toBeTrue();
+
+    expect.bool(equals(expr, expected)).toBeTrue();
   });
+
+  test("grid repeat", ({ expect, _ }) => {
+    let expr = [%expr
+      [%styled.css "grid-template-columns: repeat(auto-fill, minmax(200px, 1.0fr))"]
+    ];
+
+    let expected = [%expr
+      Emotion.css([
+        Emotion.gridTemplateColumns(
+          Emotion.list(
+            [
+              Emotion.repeat(
+                Emotion.autoFill,
+                [
+                  Emotion.minmax(
+                    Emotion.px(200), Emotion.fr(1.0)
+                  )
+                ]
+              )
+            ]
+          ),
+        ),
+      ])
+    ];
+
+    Console.log(Pprintast.string_of_expression(expr));
+
+    expect.bool(equals(expr, expected)).toBeTrue();
+  })
 });

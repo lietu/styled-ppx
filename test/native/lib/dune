@@ -1,6 +1,6 @@
 (library
   (name StyledPpxTestNativeLib)
   (library_flags (-linkall -g))
-  (libraries rely.lib styled-ppx.lib)
+  (libraries rely.lib styled-ppx.lib console.lib)
   (preprocess (pps ppx_tools_versioned.metaquot_406 styled-ppx.lib))
 )

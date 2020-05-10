@@ -50,7 +50,7 @@ ReactDOMRe.renderToElementWithId(
     </Link>
     <Wrapper>
       <Line />
-    <Wrapper>
+    </Wrapper>
   </App>,
   "app"
 );

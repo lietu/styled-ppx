@@ -56,5 +56,8 @@
     "format": "esy dune build @fmt --auto-promote",
     "watch": "esy dune build -p styled-ppx --watch",
     "utop": "esy dune utop lib -- -implicit-bindings"
+  },
+  "dependencies": {
+    "@reason-native/console": "^0.1.0"
   }
 }

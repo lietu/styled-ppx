@@ -13,8 +13,7 @@ module StateLenses = [%lenses
 ];
 
 module Component = [%styled "display: block"];
-module Component = [%styled.section
-  {|
+module Component = [%styled.section {|
   display: flex;
   justify-content: center;
 |}
@@ -26,8 +25,7 @@ module Component = [%styled {j|
   display: block;
 |j}];
 
-module Component = [%styled
-  (~space: string) => {j|
+module Component = [%styled (~space: string) => {j|
   margin: 10px $(space)px;
 |j}
 ];

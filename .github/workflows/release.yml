@@ -17,7 +17,7 @@ jobs:
     if: "github.event.label.name == 'release: nightly' || github.tag != ''"
     steps:
       - name: Config NPM package
-        run: echo ${{ github.tag }}
+        run: echo ${{ github.tag }} ${{ github.sha }}
   build:
     name: Build and test
     runs-on: ${{ matrix.os }}

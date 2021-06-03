@@ -99,17 +99,17 @@ _): Parsetree.expression => {
   | `Style =>
     let parser = makeParser(Css_parser.declaration_list);
     let ast = parser(string);
-    Css_to_emotion.render_style_call(
-      Css_to_emotion.render_declaration_list(ast)
+    Css_to_emotion.merge_styles_call(
+      Css_to_emotion.render_style_call(
+        Css_to_emotion.render_declaration_list(ast)
+      )
     );
   | `Rule =>
-    let parser = makeParser(Css_parser.declaration);
+    let parser = makeParser(Css_parser.declaration_list);
     let ast = parser(string);
-    let declarationListValues = Css_to_emotion.render_declaration(ast, ast.loc);
-    /* TODO: Instead of getting the first element,
-       fail when there's more than one declaration or
-      make a mechanism to flatten all the properties */
-    List.nth(declarationListValues, 0);
+    Css_to_emotion.render_style_call(
+      Css_to_emotion.render_declaration_list(ast)
+    )
   | `Declarations =>
     let parser = makeParser(Css_parser.declaration_list);
     let ast = parser(string);
@@ -127,7 +127,7 @@ _): Parsetree.expression => {
 
 let renderArrayPayload = (~loc, arr) => {
   Build.pexp_array(~loc, arr) |>
-    Css_to_emotion.render_style_call;
+    Css_to_emotion.merge_styles_call;
 };
 
 let getLastSequence = (expr) => {
@@ -211,10 +211,9 @@ let renderStyledDynamic = (
         {txt: str, loc: functionExpr.pexp_loc},
         delim,
         label
-      ) |> Css_to_emotion.render_style_call
+      ) |> Css_to_emotion.merge_styles_call
     | Pexp_array(arr) =>
-      Build.pexp_array(~loc, List.rev(arr))
-        |> Css_to_emotion.render_style_call
+      renderArrayPayload(~loc, List.rev(arr))
     | Pexp_sequence(expr, sequence) => {
       /* Generate a new sequence where the last expression is
         wrapped in render_style_call and render the other expressions. */

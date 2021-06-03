@@ -278,6 +278,12 @@ let render_style_call = (declaration_list): Parsetree.expression => {
   Exp.apply(~loc, ~attrs=[Create.uncurried(~loc)], ident, [(Nolabel, declaration_list)]);
 };
 
+let merge_styles_call = (declaration_list): Parsetree.expression => {
+  let loc = declaration_list.pexp_loc;
+  let ident = Exp.ident(~loc, {txt: Emotion.lident("merge"), loc});
+  Exp.apply(~loc, ident, [(Nolabel, declaration_list)]);
+};
+
 let render_rule = (~isGlobalCall, ident, r: Rule.t): Parsetree.expression => {
   switch (r) {
   | Rule.Style_rule(sr) => render_style_rule(~isUncurried=isGlobalCall, ident, sr)

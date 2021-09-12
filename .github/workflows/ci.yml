@@ -14,8 +14,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [windows-latest]
         # os: [macos-latest, ubuntu-18.04]
-        os: [macos-latest, windows-latest, ubuntu-18.04]
+        #os: [macos-latest, windows-latest, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v2
 
@@ -62,6 +63,10 @@ jobs:
         uses: egor-tensin/setup-mingw@v2
         with:
           platform: x64
+
+      - name: Install MinGW
+        if: runner.os == 'Windows'
+        run: dir C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin
 
       - name: Run ppx Native tests
         run: esy test_native

@@ -37,6 +37,12 @@ jobs:
         with:
           platform: x64
 
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v3
+        with:
+          platform: x64
+          packages: mingw64-x86_64-binutils
+
       - name: Set up MinGW utilities to PATH on Windows
         if: runner.os == 'Windows'
         run: |

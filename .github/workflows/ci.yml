@@ -40,7 +40,7 @@ jobs:
       - name: Set up MinGW
         if: runner.os == 'Windows'
         run: |
-          $mingwBin = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
+          $mingwBin = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
           cd $mingwBin
           $prefix = "x86_64-w64-mingw32"
           $exes = Get-ChildItem *.exe
@@ -54,13 +54,7 @@ jobs:
               }
             }
           }
-
-      - name: Env test
-        run: |
-          $mingwBin = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
-          $env:Path += ";$mingwBin"
-          echo $env:Path
-          x86_64-w64-mingw32-as --help
+          echo "$mingwBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Install esy
         run: npm install -g esy@0.6.11
@@ -95,8 +89,10 @@ jobs:
 
       - name: Run ppx Native tests
         run: |
-          $mingwBin = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
-          $env:Path += ";$mingwBin"
+          [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+          x86_64-w64-mingw32-as --help
+
           echo $env:Path
           esy test_native
         if: runner.os == 'Windows'

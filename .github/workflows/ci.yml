@@ -55,6 +55,13 @@ jobs:
             }
           }
 
+      - name: Env test
+        run: |
+          $mingwBin = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
+          $env:Path += ";$mingwBin"
+          echo $env:Path
+          x86_64-w64-mingw32-as --help
+
       - name: Install esy
         run: npm install -g esy@0.6.11
 
@@ -90,6 +97,7 @@ jobs:
         run: |
           $mingwBin = "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
           $env:Path += ";$mingwBin"
+          echo $env:Path
           esy test_native
         if: runner.os == 'Windows'
 

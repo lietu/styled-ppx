@@ -31,6 +31,26 @@ jobs:
           path: ~/.esy/source
           key: source-${{ matrix.os }}-${{ hashFiles('**/index.json') }}
 
+      - name: Install MinGW
+        if: runner.os == 'Windows'
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+
+      - name: Set up MinGW
+        if: runner.os == 'Windows'
+        run: |
+          cd C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin
+          $exes = Get-ChildItem *.exe
+          Foreach($exe in $exes) {
+            $name = $exe.Name
+            $target = "x86_64-w64-mingw32-$name"
+            if (-not(Test-Path $target)) {
+              cp "${exe}" "${target}"
+              echo "Set up ${target}"
+            }
+          }
+
       - name: Install esy
         run: npm install -g esy@0.6.11
 
@@ -58,22 +78,6 @@ jobs:
       - name: Build
         run: esy build
 
-      - name: Install MinGW
-        if: runner.os == 'Windows'
-        uses: egor-tensin/setup-mingw@v2
-        with:
-          platform: x64
-
-      - name: Set up MinGW
-        if: runner.os == 'Windows'
-        run: |
-          cd C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin
-          for exe in *.exe; do
-            target="x86_64-w64-mingw32-${exe}"
-            if [ ! -f "${target}" ]; then
-              cp "${exe}" "${target}"
-            fi
-          done
       - name: Run ppx Native tests
         run: esy test_native
 

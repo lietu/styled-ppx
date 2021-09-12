@@ -50,6 +50,8 @@ jobs:
               $target = "$prefix-$name"
               if (-not(Test-Path $target)) {
                 cp "${exe}" "${target}"
+                # You'd think there was a better way to get this into PATH
+                cp "$target" C:\Windows\system32
                 echo "Set up ${target}"
               }
             }

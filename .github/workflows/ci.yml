@@ -64,10 +64,16 @@ jobs:
         with:
           platform: x64
 
-      - name: Install MinGW
+      - name: Set up MinGW
         if: runner.os == 'Windows'
-        run: dir C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin
-
+        run: |
+          cd C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin
+          for exe in *.exe; do
+            target="x86_64-w64-mingw32-${exe}"
+            if [ ! -f "${target}" ]; then
+              cp "${exe}" "${target}"
+            fi
+          done
       - name: Run ppx Native tests
         run: esy test_native
 
